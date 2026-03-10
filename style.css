@@ -23,9 +23,10 @@ body {
     letter-spacing: 2px;
 }
 
-/* jsPsych centre par défaut, mais ceci assure une taille maximale cohérente */
+/* Force les images de l'expérience à s'adapter à l'écran */
 .jspsych-content img {
-    max-width: 80%;
-    max-height: 80vh;
-    border-radius: 8px; /* Optionnel : adoucit les bords des images */
+    max-width: 90vw !important;  /* Maximum 90% de la largeur de l'écran */
+    max-height: 90vh !important; /* Maximum 90% de la hauteur de l'écran */
+    object-fit: contain;         /* Garde les proportions de l'image sans la couper */
+    border-radius: 8px;          /* Optionnel : coins légèrement arrondis */
 }

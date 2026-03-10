@@ -153,7 +153,7 @@ async function runExperiment() {
         };
 
         // 8. Lancement
-        jsPsych.run([preload, demographics, instructions, procedure]);
+        jsPsych.run([preload, consent, demographics, instructions, procedure]);
 
     } catch (error) {
         console.error("Erreur d'initialisation : ", error);
