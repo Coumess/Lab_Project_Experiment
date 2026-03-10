@@ -1,0 +1,31 @@
+body {
+    background-color: #808080;
+    color: white;
+    margin: 0;
+    padding: 0;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    font-family: 'Open Sans', Arial, sans-serif;
+    overflow: hidden;
+}
+
+/* Classes spécifiques pour nos stimuli */
+.fixation {
+    font-size: 64px;
+    font-weight: normal;
+}
+
+.prime {
+    font-size: 48px;
+    font-weight: bold;
+    letter-spacing: 2px;
+}
+
+/* jsPsych centre par défaut, mais ceci assure une taille maximale cohérente */
+.jspsych-content img {
+    max-width: 80%;
+    max-height: 80vh;
+    border-radius: 8px; /* Optionnel : adoucit les bords des images */
+}
