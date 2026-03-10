@@ -33,6 +33,53 @@ async function runExperiment() {
             images: preloadImages
         };
 
+        // Consentement éclairé
+        const consent = {
+            type: jsPsychSurveyHtmlForm,
+            preamble: '<h2>Consentement Éclairé</h2>',
+            html: `
+                <div style="text-align: left; margin: 20px auto; max-width: 600px; background: white; padding: 20px; border-radius: 8px; color: black; font-size: 15px;">
+                    <p>Bonjour et bienvenue dans cette étude portant sur la perception visuelle.</p> <p><strong>Avant de commencer, veuillez lire attentivement les conditions suivantes :</strong></p> <ul> <li>Votre participation est entièrement <strong>volontaire</strong>.</li> <li>Vous êtes libre d'interrompre l'expérience à tout moment en fermant simplement cette fenêtre, sans aucune pénalité.</li> <li>Toutes les données recueillies seront traitées de manière strictement <strong>anonyme et confidentielle</strong>.</li> <li>Cette expérience dure environ 5 à 10 minutes.</li> </ul> <hr style="margin: 20px 0;"> <p style="text-align: center;"> <label style="cursor: pointer; font-weight: bold;"> <input type="checkbox" id="consent_checkbox" name="consent" required style="transform: scale(1.5); margin-right: 10px;"> Je certifie avoir plus de 18 ans, avoir lu ces informations, et j'accepte de participer. </label> </p> </div>
+            `,
+            button_label: 'Valider et Continuer',
+            data: { task: 'consent' }
+        };
+
+        // Formulaire démographique
+        const demographics = {
+            type: jsPsychSurveyHtmlForm,
+            preamble: '<h2>Informations démographiques</h2><p>Veuillez répondre aux questions ci-dessous avant de commencer :</p>',
+            html: `
+                <div style="text-align: left; margin: 20px auto; max-width: 400px; background: white; padding: 20px; border-radius: 8px; color: black;">
+                    <p>
+                        <label for="age"><strong>Âge :</strong></label><br>
+                        <input type="number" id="age" name="age" required min="18" max="99" style="width: 100%; padding: 8px; margin-top: 5px;">
+                    </p>
+                    <p>
+                        <label><strong>Sexe :</strong></label><br>
+                        <input type="radio" id="femme" name="sexe" value="Femme" required> <label for="femme">Femme</label><br>
+                        <input type="radio" id="homme" name="sexe" value="Homme"> <label for="homme">Homme</label><br>
+                        <input type="radio" id="autre" name="sexe" value="Autre"> <label for="autre">Autre / Préfère ne pas répondre</label>
+                    </p>
+                    <p>
+                        <label for="education"><strong>Niveau d'étude :</strong></label><br>
+                        <select id="education" name="education" required style="width: 100%; padding: 8px; margin-top: 5px;">
+                            <option value="">-- Sélectionnez une option --</option>
+                            <option value="Brevet">Brevet des collèges</option>
+                            <option value="Bac">Baccalauréat</option>
+                            <option value="Bac+2">Bac +2 (BTS, DUT...)</option>
+                            <option value="Bac+3">Bac +3 (Licence...)</option>
+                            <option value="Bac+5">Bac +5 (Master...)</option>
+                            <option value="Doctorat">Doctorat</option>
+                            <option value="Autre">Autre</option>
+                        </select>
+                    </p>
+                </div>
+            `,
+            button_label: 'Continuer',
+            data: { task: 'demographics' } // Étiquette pour retrouver ces données facilement
+        };
+
         // 5. Instructions (s'adaptent automatiquement au mapping)
         const instructions = {
             type: jsPsychHtmlKeyboardResponse,
@@ -106,7 +153,7 @@ async function runExperiment() {
         };
 
         // 8. Lancement
-        jsPsych.run([preload, instructions, procedure]);
+        jsPsych.run([preload, demographics, instructions, procedure]);
 
     } catch (error) {
         console.error("Erreur d'initialisation : ", error);
