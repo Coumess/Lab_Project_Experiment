@@ -1,0 +1,5 @@
+[
+  { "prime": "Sympa", "prime_condition": "positif", "target_image": "img/CFD-AF-200-228-N.jpg" },
+  { "prime": "Désagréable", "prime_condition": "négatif", "target_image": "img/CFD-AF-200-228-N.jpg" },
+  { "prime": "Chaise", "prime_condition": "neutre", "target_image": "img/CFD-AF-200-228-N.jpg" }
+]
