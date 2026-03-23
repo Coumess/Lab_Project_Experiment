@@ -1,3 +1,4 @@
+/* Mise en page */
 body {
     background-color: #808080;
     color: white;
@@ -16,6 +17,7 @@ body {
     font-size: 64px;
     font-weight: normal;
 }
+
 
 .prime {
     font-size: 48px;
