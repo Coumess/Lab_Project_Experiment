@@ -1,10 +1,11 @@
-// Générer un identifiant aléatoire unique
-const subject_id = jsPsych.randomization.randomID(8);
+// 1. GÉNÉRATION DE L'ID (SANS jsPsych)
+// On crée un ID unique AVANT de lancer quoi que ce soit
+const subject_id = Math.random().toString(36).substring(2, 10);
 
-// 1. Initialisation de jsPsych
+// 2. INITIALISATION DE jsPsych
 const jsPsych = initJsPsych({
     on_finish: function() {
-        // Au lieu de télécharger, on ENVOIE les données au serveur
+        // Envoi des données au serveur Node.js à la fin
         const donneesDeLexperience = jsPsych.data.get().values();
 
         fetch('http://localhost:3000/api/save-results', {
@@ -18,13 +19,20 @@ const jsPsych = initJsPsych({
             })
         })
         .then(response => {
-            if(response.ok) {
-                document.body.innerHTML = "<h1 style='color:white; text-align:center; margin-top:20vh;'>Merci pour votre participation !<br>Les données ont été sauvegardées.</h1>";
+            const display = document.querySelector('.jspsych-display-element');
+            if (response.ok) {
+                display.innerHTML = "<h1 style='color:white; text-align:center; margin-top:20vh;'>Merci pour votre participation !<br>Les données ont été sauvegardées.</h1>";
             } else {
-                document.body.innerHTML = "<h1 style='color:red; text-align:center; margin-top:20vh;'>Erreur lors de la sauvegarde des données.</h1>";
+                display.innerHTML = "<h1 style='color:red; text-align:center; margin-top:20vh;'>Erreur lors de la sauvegarde (Le serveur a refusé les données).</h1>";
             }
         })
-        .catch(error => console.error('Erreur:', error));
+        .catch(error => {
+            console.error('Erreur réseau:', error);
+            const display = document.querySelector('.jspsych-display-element');
+            if (display) {
+                display.innerHTML = "<h1 style='color:red; text-align:center; margin-top:20vh;'>Erreur de connexion au serveur.<br>Avez-vous bien lancé 'node server.js' dans le terminal ?</h1>";
+            }
+        });
     }
 });
 
@@ -33,7 +41,7 @@ jsPsych.data.addProperties({
     participant_id: subject_id
 });
 
-// 2. Contrebalancement aléatoire des touches
+// 3. Contrebalancement aléatoire des touches
 const mappingCondition = Math.random() < 0.5 ? 1 : 2;
 let attrKey, unattrKey;
 
@@ -45,7 +53,7 @@ if (mappingCondition === 1) {
     unattrKey = 'e';
 }
 
-// 3. Fonction asynchrone pour charger le JSON et lancer l'expérience
+// 4. Fonction asynchrone pour charger le JSON et lancer l'expérience
 async function runExperiment() {
     try {
         // Chargement du fichier JSON
@@ -53,7 +61,7 @@ async function runExperiment() {
         if (!response.ok) throw new Error("Erreur lors du chargement de stimuli.json");
         const stimuli = await response.json();
 
-        // 4. Préchargement des images (évite les latences d'affichage)
+        // Préchargement des images
         const preloadImages = stimuli.map(trial => trial.target_image);
         const preload = {
             type: jsPsychPreload,
@@ -66,7 +74,22 @@ async function runExperiment() {
             preamble: '<h2>Consentement Éclairé</h2>',
             html: `
                 <div style="text-align: left; margin: 20px auto; max-width: 600px; background: white; padding: 20px; border-radius: 8px; color: black; font-size: 15px;">
-                    <p>Bonjour et bienvenue dans cette étude portant sur la perception visuelle.</p> <p><strong>Avant de commencer, veuillez lire attentivement les conditions suivantes :</strong></p> <ul> <li>Votre participation est entièrement <strong>volontaire</strong>.</li> <li>Vous êtes libre d'interrompre l'expérience à tout moment en fermant simplement cette fenêtre, sans aucune pénalité.</li> <li>Toutes les données recueillies seront traitées de manière strictement <strong>anonyme et confidentielle</strong>.</li> <li>Cette expérience dure environ 5 à 10 minutes.</li> </ul> <hr style="margin: 20px 0;"> <p style="text-align: center;"> <label style="cursor: pointer; font-weight: bold;"> <input type="checkbox" id="consent_checkbox" name="consent" required style="transform: scale(1.5); margin-right: 10px;"> Je certifie avoir plus de 18 ans, avoir lu ces informations, et j'accepte de participer. </label> </p> </div>
+                    <p>Bonjour et bienvenue dans cette étude portant sur la perception visuelle.</p>
+                    <p><strong>Avant de commencer, veuillez lire attentivement les conditions suivantes :</strong></p>
+                    <ul>
+                        <li>Votre participation est entièrement <strong>volontaire</strong>.</li>
+                        <li>Vous êtes libre d'interrompre l'expérience à tout moment en fermant simplement cette fenêtre, sans aucune pénalité.</li>
+                        <li>Toutes les données recueillies seront traitées de manière strictement <strong>anonyme et confidentielle</strong>.</li>
+                        <li>Cette expérience dure environ 5 à 10 minutes.</li>
+                    </ul>
+                    <hr style="margin: 20px 0;">
+                    <p style="text-align: center;">
+                        <label style="cursor: pointer; font-weight: bold;">
+                            <input type="checkbox" id="consent_checkbox" name="consent" required style="transform: scale(1.5); margin-right: 10px;">
+                            Je certifie avoir plus de 18 ans, avoir lu ces informations, et j'accepte de participer.
+                        </label>
+                    </p>
+                </div>
             `,
             button_label: 'Valider et Continuer',
             data: { task: 'consent' }
@@ -82,12 +105,12 @@ async function runExperiment() {
                         <label for="age"><strong>Âge :</strong></label><br>
                         <input type="number" id="age" name="age" required min="18" max="99" style="width: 100%; padding: 8px; margin-top: 5px;">
                     </p>
-                    <p>
-                        <label><strong>Sexe :</strong></label><br>
+                    <fieldset style="border: none; padding: 0; margin: 0 0 15px 0;">
+                        <legend style="font-weight: bold; margin-bottom: 5px;">Sexe :</legend>
                         <input type="radio" id="femme" name="sexe" value="Femme" required> <label for="femme">Femme</label><br>
                         <input type="radio" id="homme" name="sexe" value="Homme"> <label for="homme">Homme</label><br>
                         <input type="radio" id="autre" name="sexe" value="Autre"> <label for="autre">Autre / Préfère ne pas répondre</label>
-                    </p>
+                    </fieldset>
                     <p>
                         <label for="education"><strong>Niveau d'étude :</strong></label><br>
                         <select id="education" name="education" required style="width: 100%; padding: 8px; margin-top: 5px;">
@@ -104,10 +127,10 @@ async function runExperiment() {
                 </div>
             `,
             button_label: 'Continuer',
-            data: { task: 'demographics' } // Étiquette pour retrouver ces données facilement
+            data: { task: 'demographics' }
         };
 
-        // 5. Instructions (s'adaptent automatiquement au mapping)
+        // Instructions
         const instructions = {
             type: jsPsychHtmlKeyboardResponse,
             stimulus: `
@@ -124,7 +147,7 @@ async function runExperiment() {
             `
         };
 
-        // 6. Définition des événements d'un essai (Trial)
+        // Essais (Trials)
         const fixation = {
             type: jsPsychHtmlKeyboardResponse,
             stimulus: '<div class="fixation">+</div>',
@@ -136,7 +159,6 @@ async function runExperiment() {
         const prime = {
             type: jsPsychHtmlKeyboardResponse,
             stimulus: function() {
-                // Utilisation d'une fonction pour récupérer la variable dynamiquement
                 return `<div class="prime">${jsPsych.timelineVariable('prime')}</div>`;
             },
             choices: "NO_KEYS",
@@ -146,7 +168,7 @@ async function runExperiment() {
 
         const isi = {
             type: jsPsychHtmlKeyboardResponse,
-            stimulus: '', // Écran vide
+            stimulus: '',
             choices: "NO_KEYS",
             trial_duration: 200,
             data: { task: 'isi' }
@@ -155,6 +177,7 @@ async function runExperiment() {
         const target = {
             type: jsPsychImageKeyboardResponse,
             stimulus: jsPsych.timelineVariable('target_image'),
+            stimulus_height: 500, // Ajustement de la taille de l'image
             choices: ['e', 'p'],
             data: {
                 task: 'target',
@@ -162,7 +185,6 @@ async function runExperiment() {
                 prime_condition: jsPsych.timelineVariable('prime_condition')
             },
             on_finish: function(data) {
-                // Enregistrement de la signification de la réponse du participant
                 if (data.response === attrKey) {
                     data.response_meaning = 'Attractif';
                 } else if (data.response === unattrKey) {
@@ -172,14 +194,13 @@ async function runExperiment() {
             }
         };
 
-        // 7. Assemblage de la procédure avec les variables de la timeline
         const procedure = {
             timeline: [fixation, prime, isi, target],
             timeline_variables: stimuli,
-            randomize_order: true // Mélange aléatoire des essais pour chaque participant
+            randomize_order: true
         };
 
-        // 8. Lancement
+        // Lancement !
         jsPsych.run([preload, consent, demographics, instructions, procedure]);
 
     } catch (error) {
@@ -188,5 +209,4 @@ async function runExperiment() {
     }
 }
 
-// Exécution
 runExperiment();
