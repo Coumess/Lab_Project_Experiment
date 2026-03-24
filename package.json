@@ -1,0 +1,27 @@
+{
+  "name": "lab_project_experiment",
+  "version": "1.0.0",
+  "main": "experiment.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Coumess/Lab_Project_Experiment.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/Coumess/Lab_Project_Experiment/issues"
+  },
+  "homepage": "https://github.com/Coumess/Lab_Project_Experiment#readme",
+  "description": "",
+  "dependencies": {
+    "@fastify/cors": "^11.2.0",
+    "@fastify/express": "^4.0.4",
+    "body-parser": "^2.2.2",
+    "express": "^5.2.1",
+    "fastify": "^5.8.4"
+  }
+}

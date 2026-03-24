@@ -1,9 +1,36 @@
+// Générer un identifiant aléatoire unique
+const subject_id = jsPsych.randomization.randomID(8);
+
 // 1. Initialisation de jsPsych
 const jsPsych = initJsPsych({
     on_finish: function() {
-        // Affiche les données brutes à la fin de l'expérience
-        jsPsych.data.displayData();
+        // Au lieu de télécharger, on ENVOIE les données au serveur
+        const donneesDeLexperience = jsPsych.data.get().values();
+
+        fetch('http://localhost:3000/api/save-results', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({
+                participant_id: subject_id,
+                resultats: donneesDeLexperience
+            })
+        })
+        .then(response => {
+            if(response.ok) {
+                document.body.innerHTML = "<h1 style='color:white; text-align:center; margin-top:20vh;'>Merci pour votre participation !<br>Les données ont été sauvegardées.</h1>";
+            } else {
+                document.body.innerHTML = "<h1 style='color:red; text-align:center; margin-top:20vh;'>Erreur lors de la sauvegarde des données.</h1>";
+            }
+        })
+        .catch(error => console.error('Erreur:', error));
     }
+});
+
+// Ajouter cet identifiant à toutes les lignes de données
+jsPsych.data.addProperties({
+    participant_id: subject_id
 });
 
 // 2. Contrebalancement aléatoire des touches
