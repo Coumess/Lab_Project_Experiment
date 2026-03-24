@@ -32,3 +32,10 @@ body {
     object-fit: contain;         /* Garde les proportions de l'image sans la couper */
     border-radius: 8px;          /* Optionnel : coins légèrement arrondis */
 }
+
+.jspsych-image-keyboard-response-stimulus {
+    max-height: 80vh; /* L'image ne dépassera jamais 80% de la hauteur de l'écran */
+    max-width: 90vw;  /* L'image ne dépassera jamais 90% de la largeur de l'écran */
+    width: auto;      /* Maintient les proportions */
+    height: auto;     /* Maintient les proportions */
+}
