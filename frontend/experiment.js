@@ -1,11 +1,11 @@
-// 1. GÉNÉRATION DE L'ID (SANS jsPsych)
-// On crée un ID unique AVANT de lancer quoi que ce soit
+// GÉNÉRATION DE L'ID
+// Création d'un ID unique en décimal traduit en string
 const subject_id = Math.random().toString(36).substring(2, 10);
 
-// 2. INITIALISATION DE jsPsych
+// INITIALISATION DE jsPsych
 const jsPsych = initJsPsych({
     on_finish: function() {
-        // Envoi des données au serveur Node.js à la fin
+        // Envoi des données au serveur à la fin de l'expérience
         const donneesDeLexperience = jsPsych.data.get().values();
 
         fetch('http://localhost:3000/api/save-results', {
@@ -41,19 +41,13 @@ jsPsych.data.addProperties({
     participant_id: subject_id
 });
 
-// 3. Contrebalancement aléatoire des touches
-const mappingCondition = Math.random() < 0.5 ? 1 : 2;
-let attrKey, unattrKey;
+//  Attribution des touches
+const attrKey = 'ArrowRight';
+const unattrKey = 'ArrowLeft';
+const attrDisplay = 'Flèche Droite (→)';
+const unattrDisplay = 'Flèche Gauche (←)';
 
-if (mappingCondition === 1) {
-    attrKey = 'e';
-    unattrKey = 'p';
-} else {
-    attrKey = 'p';
-    unattrKey = 'e';
-}
-
-// 4. Fonction asynchrone pour charger le JSON et lancer l'expérience
+// Fonction asynchrone pour charger le JSON et lancer l'expérience (se fait en même temps que le reste)
 async function runExperiment() {
     try {
         // Chargement du fichier JSON
@@ -139,15 +133,15 @@ async function runExperiment() {
                     <p>Dans cette tâche, vous allez voir un mot apparaître brièvement, suivi du visage d'une personne.</p>
                     <p>Votre objectif est de juger <strong>le plus rapidement possible</strong> si vous trouvez ce visage attractif ou non.</p>
                     <br>
-                    <p>Si le visage est <strong>Attractif</strong>, appuyez sur la touche <strong style="color: #ffca28; font-size: 24px;">${attrKey.toUpperCase()}</strong>.</p>
-                    <p>Si le visage est <strong>Non attractif</strong>, appuyez sur la touche <strong style="color: #ffca28; font-size: 24px;">${unattrKey.toUpperCase()}</strong>.</p>
+                    <p>Si le visage est <strong>Attractif</strong>, appuyez sur la touche <strong style="color: #ffca28; font-size: 24px;">${attrDisplay.toUpperCase()}</strong>.</p>
+                    <p>Si le visage est <strong>Non attractif</strong>, appuyez sur la touche <strong style="color: #ffca28; font-size: 24px;">${unattrDisplay.toUpperCase()}</strong>.</p>
                     <br>
-                    <p>Placez vos index sur les touches ${attrKey.toUpperCase()} et ${unattrKey.toUpperCase()} et appuyez sur n'importe quelle touche pour commencer.</p>
+                    <p>Placez vos doigts sur les touches ${attrDisplay.toUpperCase()} et ${unattrDisplay.toUpperCase()} et appuyez sur n'importe quelle touche pour commencer.</p>
                 </div>
             `
         };
 
-        // Essais (Trials)
+        // Essais
         const fixation = {
             type: jsPsychHtmlKeyboardResponse,
             stimulus: '<div class="fixation">+</div>',
@@ -178,7 +172,7 @@ async function runExperiment() {
             type: jsPsychImageKeyboardResponse,
             stimulus: jsPsych.timelineVariable('target_image'),
             stimulus_height: 500, // Ajustement de la taille de l'image
-            choices: ['e', 'p'],
+            choices: [attrKey, unattrKey],
             data: {
                 task: 'target',
                 prime_word: jsPsych.timelineVariable('prime'),

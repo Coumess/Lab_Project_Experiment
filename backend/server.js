@@ -28,12 +28,30 @@ async function startServer() {
             // On récupère l'ID du participant
             const participantId = donnees.participant_id || 'anonyme_' + Date.now();
             
-            // On convertit les données en format lisible (JSON)
-            const contenu = JSON.stringify(donnees.resultats, null, 2);
-            
-            // On sauvegarde ça dans un fichier
-            fs.writeFileSync(`resultats_${participantId}.json`, contenu);
-            
+            const filePath = './data/all_results.json';
+
+            // Vérifie que le dossier data existe
+            if (!fs.existsSync('./data')) {
+                fs.mkdirSync('./data');
+            }
+
+            // Créer le fichier s'il n'existe pas
+            if (!fs.existsSync(filePath)) {
+                fs.writeFileSync(filePath, '[]');
+            }
+
+            // Lire les données existantes
+            const existingData = JSON.parse(fs.readFileSync(filePath));
+
+            // Ajouter le nouveau participant
+            existingData.push({
+                participant_id: participantId,
+                resultats: donnees.resultats
+            });
+
+            // Réécrire le fichier proprement
+            fs.writeFileSync(filePath, JSON.stringify(existingData, null, 2));
+                        
             console.log(`✅ Succès : Données du participant ${participantId} sauvegardées !`);
             
             return { success: true, message: "Sauvegardé avec succès" };
