@@ -131,13 +131,47 @@ async function runExperiment() {
             stimulus: `
                 <div style="max-width: 800px; text-align: center;">
                     <h1>Bienvenue dans cette étude</h1>
-                    <p>Dans cette tâche, vous allez voir un mot apparaître brièvement, suivi du visage d'une personne.</p>
+                    <p>Dans ces tâches, vous allez juger un visage d'une personne et indiquer s'il est attractif ou non.</p>
                     <p>Votre objectif est de juger <strong style="color: red">le plus rapidement possible</strong> si vous trouvez ce visage <strong>attractif</strong> ou non</strong>.</p>
                     <br>
                     <p>Si le visage est <strong>Attractif</strong>, appuyez sur la touche <strong style="color: red; font-size: 24px;">${attrDisplay.toUpperCase()}</strong>.</p>
                     <p>Si le visage est <strong>Non attractif</strong>, appuyez sur la touche <strong style="color: red; font-size: 24px;">${unattrDisplay.toUpperCase()}</strong>.</p>
                     <br>
                     <p>Placez vos doigts sur les touches ${attrDisplay.toUpperCase()} et ${unattrDisplay.toUpperCase()} et appuyez sur n'importe quelle touche pour commencer.</p>
+                </div>
+            `
+        };
+
+        // Modalité contrôle
+        const instru_controle = {
+            type: jsPsychHtmlKeyboardResponse,
+            stimulus: `
+                <div style="max-width: 800px; text-align: center;">
+                    <h1>Partie 1</h1>
+                    <p>Dans cette tâche, vous allez voir un visage d'une personne.</p>
+                    <p>Votre objectif est de juger <strong style="color: red">le plus rapidement possible</strong> si vous trouvez ce visage <strong>attractif</strong> ou non</strong>.</p>
+                    <br>
+                    <p>Si le visage est <strong>Attractif</strong>, appuyez sur la touche <strong style="color: red; font-size: 24px;">${attrDisplay.toUpperCase()}</strong>.</p>
+                    <p>Si le visage est <strong>Non attractif</strong>, appuyez sur la touche <strong style="color: red; font-size: 24px;">${unattrDisplay.toUpperCase()}</strong>.</p>
+                    <br>
+                    <p>Appuyez sur n'importe quelle touche pour commencer.</p>
+                </div>
+            `
+        };
+
+        // Modalité expérience
+        const instru_exp = {
+            type: jsPsychHtmlKeyboardResponse,
+            stimulus: `
+                <div style="max-width: 800px; text-align: center;">
+                    <h1>Partie 2</h1>
+                    <p>Dans cette tâche, vous allez voir un mot apparaître brièvement, suivi du visage d'une personne.</p>
+                    <p>Votre objectif est de juger <strong style="color: red">le plus rapidement possible</strong> si vous trouvez ce visage <strong>attractif</strong> ou non</strong>.</p>
+                    <br>
+                    <p>Si le visage est <strong>Attractif</strong>, appuyez sur la touche <strong style="color: red; font-size: 24px;">${attrDisplay.toUpperCase()}</strong>.</p>
+                    <p>Si le visage est <strong>Non attractif</strong>, appuyez sur la touche <strong style="color: red; font-size: 24px;">${unattrDisplay.toUpperCase()}</strong>.</p>
+                    <br>
+                    <p>Appuyez sur n'importe quelle touche pour commencer.</p>
                 </div>
             `
         };
@@ -202,13 +236,13 @@ async function runExperiment() {
         
         // condition contrôle
         const control = {
-            timeline: [fixation, target],
+            timeline: [fixation, isi, target],
             timeline_variables: stimuli,
             random: true
         };
 
         // Lancement
-        jsPsych.run([preload, consent, demographics, instructions, procedure]);
+        jsPsych.run([preload, consent, demographics, instructions, instru_controle, control, instru_exp, procedure]);
 
     } catch (error) {
         console.error("Erreur d'initialisation : ", error);
