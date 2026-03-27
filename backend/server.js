@@ -28,11 +28,11 @@ async function startServer() {
             // On récupère l'ID du participant
             const participantId = donnees.participant_id || 'anonyme_' + Date.now();
             
-            const filePath = './data/all_results.json';
+            const filePath = 'backend/data/all_results.json';
 
             // Vérifie que le dossier data existe
-            if (!fs.existsSync('./data')) {
-                fs.mkdirSync('./data');
+            if (!fs.existsSync('backend/data')) {
+                fs.mkdirSync('backend/data');
             }
 
             // Créer le fichier s'il n'existe pas

@@ -55,26 +55,27 @@ async function runExperiment() {
         if (!response.ok) throw new Error("Erreur lors du chargement de stimuli.json");
         const stimuli = await response.json();
 
-        // Préchargement des images
+        // Préchargement des images (peut-être à changer pour randomize les trials)
         const preloadImages = stimuli.map(trial => trial.target_image);
         const preload = {
             type: jsPsychPreload,
             images: preloadImages
         };
 
-        // Consentement éclairé
+        // Consentement éclairé (inspiré du CNRS)
         const consent = {
             type: jsPsychSurveyHtmlForm,
             preamble: '<h2>Consentement Éclairé</h2>',
             html: `
                 <div style="text-align: left; margin: 20px auto; max-width: 600px; background: white; padding: 20px; border-radius: 8px; color: black; font-size: 15px;">
-                    <p>Bonjour et bienvenue dans cette étude portant sur la perception visuelle.</p>
+                    <p>Bonjour et bienvenue dans cette expérience.</p>
                     <p><strong>Avant de commencer, veuillez lire attentivement les conditions suivantes :</strong></p>
                     <ul>
                         <li>Votre participation est entièrement <strong>volontaire</strong>.</li>
-                        <li>Vous êtes libre d'interrompre l'expérience à tout moment en fermant simplement cette fenêtre, sans aucune pénalité.</li>
+                        <li>Vous êtes libre d'interrompre l'expérience à tout moment en fermant simplement cette fenêtre, sans enregistrement de vos données.</li>
                         <li>Toutes les données recueillies seront traitées de manière strictement <strong>anonyme et confidentielle</strong>.</li>
-                        <li>Cette expérience dure environ 5 à 10 minutes.</li>
+                        <li> Vous acceptez que vos réponses à l'expérience posées soient exploitées dans le cadre de l'étude.</li>
+                        <li>Cette expérience dure environ x à x minutes.</li>
                     </ul>
                     <hr style="margin: 20px 0;">
                     <p style="text-align: center;">
@@ -131,10 +132,10 @@ async function runExperiment() {
                 <div style="max-width: 800px; text-align: center;">
                     <h1>Bienvenue dans cette étude</h1>
                     <p>Dans cette tâche, vous allez voir un mot apparaître brièvement, suivi du visage d'une personne.</p>
-                    <p>Votre objectif est de juger <strong>le plus rapidement possible</strong> si vous trouvez ce visage attractif ou non.</p>
+                    <p>Votre objectif est de juger <strong style="color: red">le plus rapidement possible</strong> si vous trouvez ce visage <strong>attractif</strong> ou non</strong>.</p>
                     <br>
-                    <p>Si le visage est <strong>Attractif</strong>, appuyez sur la touche <strong style="color: #ffca28; font-size: 24px;">${attrDisplay.toUpperCase()}</strong>.</p>
-                    <p>Si le visage est <strong>Non attractif</strong>, appuyez sur la touche <strong style="color: #ffca28; font-size: 24px;">${unattrDisplay.toUpperCase()}</strong>.</p>
+                    <p>Si le visage est <strong>Attractif</strong>, appuyez sur la touche <strong style="color: red; font-size: 24px;">${attrDisplay.toUpperCase()}</strong>.</p>
+                    <p>Si le visage est <strong>Non attractif</strong>, appuyez sur la touche <strong style="color: red; font-size: 24px;">${unattrDisplay.toUpperCase()}</strong>.</p>
                     <br>
                     <p>Placez vos doigts sur les touches ${attrDisplay.toUpperCase()} et ${unattrDisplay.toUpperCase()} et appuyez sur n'importe quelle touche pour commencer.</p>
                 </div>
@@ -149,17 +150,18 @@ async function runExperiment() {
             trial_duration: 1000,
             data: { task: 'fixation' }
         };
-
-        const prime = {
+        // mot à valence (neg or pos)
+        const word = {
             type: jsPsychHtmlKeyboardResponse,
             stimulus: function() {
-                return `<div class="prime">${jsPsych.timelineVariable('prime')}</div>`;
+                return `<div class="word">${jsPsych.timelineVariable('word')}</div>`;
             },
             choices: "NO_KEYS",
             trial_duration: 800,
-            data: { task: 'prime' }
+            data: { task: 'word' }
         };
-
+        
+        // Une croix en transition (à enlever maybe)
         const isi = {
             type: jsPsychHtmlKeyboardResponse,
             stimulus: '',
@@ -167,16 +169,17 @@ async function runExperiment() {
             trial_duration: 200,
             data: { task: 'isi' }
         };
-
+        
+        // Face que l'on présente 
         const target = {
             type: jsPsychImageKeyboardResponse,
             stimulus: jsPsych.timelineVariable('target_image'),
             stimulus_height: 500, // Ajustement de la taille de l'image
-            choices: [attrKey, unattrKey],
+            choices: [attrKey, unattrKey], // Commande pour indiquer attractif ou non
             data: {
                 task: 'target',
-                prime_word: jsPsych.timelineVariable('prime'),
-                prime_condition: jsPsych.timelineVariable('prime_condition')
+                word: jsPsych.timelineVariable('word'),
+                valence: jsPsych.timelineVariable('valence')
             },
             on_finish: function(data) {
                 if (data.response === attrKey) {
@@ -189,12 +192,12 @@ async function runExperiment() {
         };
 
         const procedure = {
-            timeline: [fixation, prime, isi, target],
+            timeline: [fixation, word, isi, target],
             timeline_variables: stimuli,
             randomize_order: true
         };
 
-        // Lancement !
+        // Lancement
         jsPsych.run([preload, consent, demographics, instructions, procedure]);
 
     } catch (error) {

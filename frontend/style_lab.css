@@ -1,7 +1,7 @@
 /* Mise en page */
 body {
-    background-color: #808080;
-    color: white;
+    background-color: white;
+    color: black;
     margin: 0;
     padding: 0;
     display: flex;
@@ -19,7 +19,7 @@ body {
 }
 
 
-.prime {
+.word {
     font-size: 48px;
     font-weight: bold;
     letter-spacing: 2px;
