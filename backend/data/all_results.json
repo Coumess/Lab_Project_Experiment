@@ -1,0 +1,196 @@
+[
+  {
+    "participant_id": "j4ptiu6m",
+    "resultats": [
+      {
+        "success": true,
+        "timeout": false,
+        "failed_images": [],
+        "failed_audio": [],
+        "failed_video": [],
+        "trial_type": "preload",
+        "trial_index": 0,
+        "time_elapsed": 67,
+        "internal_node_id": "0.0-0.0",
+        "participant_id": "j4ptiu6m"
+      },
+      {
+        "rt": 1505,
+        "response": {
+          "consent": "on"
+        },
+        "task": "consent",
+        "trial_type": "survey-html-form",
+        "trial_index": 1,
+        "time_elapsed": 1574,
+        "internal_node_id": "0.0-1.0",
+        "participant_id": "j4ptiu6m"
+      },
+      {
+        "rt": 4395,
+        "response": {
+          "age": "21",
+          "sexe": "Homme",
+          "education": "Bac+2"
+        },
+        "task": "demographics",
+        "trial_type": "survey-html-form",
+        "trial_index": 2,
+        "time_elapsed": 5970,
+        "internal_node_id": "0.0-2.0",
+        "participant_id": "j4ptiu6m"
+      },
+      {
+        "rt": 986,
+        "stimulus": "\n                <div style=\"max-width: 800px; text-align: center;\">\n                    <h1>Bienvenue dans cette étude</h1>\n                    <p>Dans cette tâche, vous allez voir un mot apparaître brièvement, suivi du visage d'une personne.</p>\n                    <p>Votre objectif est de juger <strong style=\"color: red\">le plus rapidement possible</strong> si vous trouvez ce visage <strong>attractif</strong> ou non</strong>.</p>\n                    <br>\n                    <p>Si le visage est <strong>Attractif</strong>, appuyez sur la touche <strong style=\"color: red; font-size: 24px;\">FLÈCHE DROITE (→)</strong>.</p>\n                    <p>Si le visage est <strong>Non attractif</strong>, appuyez sur la touche <strong style=\"color: red; font-size: 24px;\">FLÈCHE GAUCHE (←)</strong>.</p>\n                    <br>\n                    <p>Placez vos doigts sur les touches FLÈCHE DROITE (→) et FLÈCHE GAUCHE (←) et appuyez sur n'importe quelle touche pour commencer.</p>\n                </div>\n            ",
+        "response": "arrowright",
+        "trial_type": "html-keyboard-response",
+        "trial_index": 3,
+        "time_elapsed": 6958,
+        "internal_node_id": "0.0-3.0",
+        "participant_id": "j4ptiu6m"
+      },
+      {
+        "rt": null,
+        "stimulus": "<div class=\"fixation\">+</div>",
+        "response": null,
+        "task": "fixation",
+        "trial_type": "html-keyboard-response",
+        "trial_index": 4,
+        "time_elapsed": 7976,
+        "internal_node_id": "0.0-4.0-0.0",
+        "participant_id": "j4ptiu6m"
+      },
+      {
+        "rt": null,
+        "stimulus": "<div class=\"word\">Sympa</div>",
+        "response": null,
+        "task": "word",
+        "trial_type": "html-keyboard-response",
+        "trial_index": 5,
+        "time_elapsed": 8790,
+        "internal_node_id": "0.0-4.0-1.0",
+        "participant_id": "j4ptiu6m"
+      },
+      {
+        "rt": null,
+        "stimulus": "",
+        "response": null,
+        "task": "isi",
+        "trial_type": "html-keyboard-response",
+        "trial_index": 6,
+        "time_elapsed": 9004,
+        "internal_node_id": "0.0-4.0-2.0",
+        "participant_id": "j4ptiu6m"
+      },
+      {
+        "rt": 426,
+        "stimulus": "img/CFD-AF-200-228-N.jpg",
+        "response": "arrowright",
+        "task": "target",
+        "word": "Sympa",
+        "valence": "positif",
+        "trial_type": "image-keyboard-response",
+        "trial_index": 7,
+        "time_elapsed": 9433,
+        "internal_node_id": "0.0-4.0-3.0",
+        "participant_id": "j4ptiu6m",
+        "mapping_condition": "Attr=ARROWRIGHT | Unattr=ARROWLEFT"
+      },
+      {
+        "rt": null,
+        "stimulus": "<div class=\"fixation\">+</div>",
+        "response": null,
+        "task": "fixation",
+        "trial_type": "html-keyboard-response",
+        "trial_index": 8,
+        "time_elapsed": 10447,
+        "internal_node_id": "0.0-4.0-0.1",
+        "participant_id": "j4ptiu6m"
+      },
+      {
+        "rt": null,
+        "stimulus": "<div class=\"word\">Désagréable</div>",
+        "response": null,
+        "task": "word",
+        "trial_type": "html-keyboard-response",
+        "trial_index": 9,
+        "time_elapsed": 11255,
+        "internal_node_id": "0.0-4.0-1.1",
+        "participant_id": "j4ptiu6m"
+      },
+      {
+        "rt": null,
+        "stimulus": "",
+        "response": null,
+        "task": "isi",
+        "trial_type": "html-keyboard-response",
+        "trial_index": 10,
+        "time_elapsed": 11460,
+        "internal_node_id": "0.0-4.0-2.1",
+        "participant_id": "j4ptiu6m"
+      },
+      {
+        "rt": 21,
+        "stimulus": "img/CFD-AF-200-228-N.jpg",
+        "response": "arrowleft",
+        "task": "target",
+        "word": "Désagréable",
+        "valence": "négatif",
+        "trial_type": "image-keyboard-response",
+        "trial_index": 11,
+        "time_elapsed": 11483,
+        "internal_node_id": "0.0-4.0-3.1",
+        "participant_id": "j4ptiu6m",
+        "mapping_condition": "Attr=ARROWRIGHT | Unattr=ARROWLEFT"
+      },
+      {
+        "rt": null,
+        "stimulus": "<div class=\"fixation\">+</div>",
+        "response": null,
+        "task": "fixation",
+        "trial_type": "html-keyboard-response",
+        "trial_index": 12,
+        "time_elapsed": 12491,
+        "internal_node_id": "0.0-4.0-0.2",
+        "participant_id": "j4ptiu6m"
+      },
+      {
+        "rt": null,
+        "stimulus": "<div class=\"word\">Chaise</div>",
+        "response": null,
+        "task": "word",
+        "trial_type": "html-keyboard-response",
+        "trial_index": 13,
+        "time_elapsed": 13299,
+        "internal_node_id": "0.0-4.0-1.2",
+        "participant_id": "j4ptiu6m"
+      },
+      {
+        "rt": null,
+        "stimulus": "",
+        "response": null,
+        "task": "isi",
+        "trial_type": "html-keyboard-response",
+        "trial_index": 14,
+        "time_elapsed": 13505,
+        "internal_node_id": "0.0-4.0-2.2",
+        "participant_id": "j4ptiu6m"
+      },
+      {
+        "rt": 241,
+        "stimulus": "img/CFD-AF-200-228-N.jpg",
+        "response": "arrowright",
+        "task": "target",
+        "word": "Chaise",
+        "valence": "neutre",
+        "trial_type": "image-keyboard-response",
+        "trial_index": 15,
+        "time_elapsed": 13747,
+        "internal_node_id": "0.0-4.0-3.2",
+        "participant_id": "j4ptiu6m",
+        "mapping_condition": "Attr=ARROWRIGHT | Unattr=ARROWLEFT"
+      }
+    ]
+  }
+]

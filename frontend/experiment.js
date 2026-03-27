@@ -143,6 +143,8 @@ async function runExperiment() {
         };
 
         // Essais
+
+        // Une croix en transition (à enlever maybe)
         const fixation = {
             type: jsPsychHtmlKeyboardResponse,
             stimulus: '<div class="fixation">+</div>',
@@ -161,7 +163,7 @@ async function runExperiment() {
             data: { task: 'word' }
         };
         
-        // Une croix en transition (à enlever maybe)
+        // temps d'attente
         const isi = {
             type: jsPsychHtmlKeyboardResponse,
             stimulus: '',
@@ -190,11 +192,19 @@ async function runExperiment() {
                 data.mapping_condition = `Attr=${attrKey.toUpperCase()} | Unattr=${unattrKey.toUpperCase()}`;
             }
         };
-
+        
+        // test valence
         const procedure = {
             timeline: [fixation, word, isi, target],
             timeline_variables: stimuli,
-            randomize_order: true
+            randomize_order: true // randomize les conditions x
+        };
+        
+        // condition contrôle
+        const control = {
+            timeline: [fixation, target],
+            timeline_variables: stimuli,
+            random: true
         };
 
         // Lancement
