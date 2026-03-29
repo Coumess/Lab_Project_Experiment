@@ -42,10 +42,10 @@ jsPsych.data.addProperties({
 });
 
 //  Attribution des touches
-const attrKey = 'ArrowRight';
-const unattrKey = 'ArrowLeft';
-const attrDisplay = 'Flèche Droite (→)';
-const unattrDisplay = 'Flèche Gauche (←)';
+const attrKey = 'P';
+const unattrKey = 'E';
+const attrDisplay = 'P';
+const unattrDisplay = 'E';
 
 // Fonction asynchrone pour charger le JSON et lancer l'expérience (se fait en même temps que le reste)
 async function runExperiment() {
@@ -241,7 +241,7 @@ async function runExperiment() {
             random: true
         };
 
-        // Lancement
+        // Scénario
         jsPsych.run([preload, consent, demographics, instructions, instru_controle, control, instru_exp, procedure]);
 
     } catch (error) {
