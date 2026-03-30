@@ -119,6 +119,17 @@ async function runExperiment() {
                             <option value="Autre">Autre</option>
                         </select>
                     </p>
+                    <p>
+                        <label for="langue"><strong>Niveau de français :</strong></label><br>
+                        <select id="langue" name="niveau_francais" required style="width: 100%; padding: 8px; margin-top: 5px;">
+                            <option value="">-- Sélectionnez une option --</option>
+                            <option value="Natif">Langue maternelle (Natif)</option>
+                            <option value="Bilingue_C2">Bilingue / Maîtrise (C2)</option>
+                            <option value="Avance_C1">Courant / Avancé (C1)</option>
+                            <option value="Intermediaire_B1_B2">Intermédiaire (B1 - B2)</option>
+                            <option value="Debutant_A1_A2">Débutant (A1 - A2)</option>
+                        </select>
+                    </p>
                 </div>
             `,
             button_label: 'Continuer',
@@ -142,29 +153,12 @@ async function runExperiment() {
             `
         };
 
-        // Modalité contrôle
-        const instru_controle = {
-            type: jsPsychHtmlKeyboardResponse,
-            stimulus: `
-                <div style="max-width: 800px; text-align: center;">
-                    <h1>Partie 1</h1>
-                    <p>Dans cette tâche, vous allez voir un visage d'une personne.</p>
-                    <p>Votre objectif est de juger <strong style="color: red">le plus rapidement possible</strong> si vous trouvez ce visage <strong>attractif</strong> ou non</strong>.</p>
-                    <br>
-                    <p>Si le visage est <strong>Attractif</strong>, appuyez sur la touche <strong style="color: red; font-size: 24px;">${attrDisplay.toUpperCase()}</strong>.</p>
-                    <p>Si le visage est <strong>Non attractif</strong>, appuyez sur la touche <strong style="color: red; font-size: 24px;">${unattrDisplay.toUpperCase()}</strong>.</p>
-                    <br>
-                    <p>Appuyez sur n'importe quelle touche pour commencer.</p>
-                </div>
-            `
-        };
-
         // Modalité expérience
         const instru_exp = {
             type: jsPsychHtmlKeyboardResponse,
             stimulus: `
                 <div style="max-width: 800px; text-align: center;">
-                    <h1>Partie 2</h1>
+                    <h1>Expérience</h1>
                     <p>Dans cette tâche, vous allez voir un mot apparaître brièvement, suivi du visage d'une personne.</p>
                     <p>Votre objectif est de juger <strong style="color: red">le plus rapidement possible</strong> si vous trouvez ce visage <strong>attractif</strong> ou non</strong>.</p>
                     <br>
@@ -178,12 +172,12 @@ async function runExperiment() {
 
         // Essais
 
-        // Une croix en transition (à enlever maybe)
+        // Une croix en transition / Inter-Stimulus Interval (ISI)
         const fixation = {
             type: jsPsychHtmlKeyboardResponse,
             stimulus: '<div class="fixation">+</div>',
             choices: "NO_KEYS",
-            trial_duration: 1000,
+            trial_duration: 300,
             data: { task: 'fixation' }
         };
         // mot à valence (neg or pos)
@@ -195,15 +189,6 @@ async function runExperiment() {
             choices: "NO_KEYS",
             trial_duration: 800,
             data: { task: 'word' }
-        };
-        
-        // temps d'attente
-        const isi = {
-            type: jsPsychHtmlKeyboardResponse,
-            stimulus: '',
-            choices: "NO_KEYS",
-            trial_duration: 200,
-            data: { task: 'isi' }
         };
         
         // Face que l'on présente 
@@ -229,20 +214,13 @@ async function runExperiment() {
         
         // test valence
         const procedure = {
-            timeline: [fixation, word, isi, target],
+            timeline: [fixation, word, fixation, target],
             timeline_variables: stimuli,
             randomize_order: true // randomize les conditions x
         };
-        
-        // condition contrôle
-        const control = {
-            timeline: [fixation, isi, target],
-            timeline_variables: stimuli,
-            random: true
-        };
 
         // Scénario
-        jsPsych.run([preload, consent, demographics, instructions, instru_controle, control, instru_exp, procedure]);
+        jsPsych.run([preload, consent, demographics, instructions, instru_exp, procedure]);
 
     } catch (error) {
         console.error("Erreur d'initialisation : ", error);
