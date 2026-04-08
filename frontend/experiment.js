@@ -6,7 +6,12 @@ const subject_id = Math.random().toString(36).substring(2, 10);
 const jsPsych = initJsPsych({
     on_finish: function() {
         // Envoi des données au serveur à la fin de l'expérience
-        const donneesDeLexperience = jsPsych.data.get().values();
+        const donneesPropres = jsPsych.data.get()
+            .filterCustom(function(trial) {
+                return trial.task === 'target' || trial.task === 'demographics';
+            })
+            .ignore(['internal_node_id', 'time_elapsed', 'trial_type', 'success', 'timeout', 'failed_images'])
+            .values();
 
         fetch('http://localhost:3000/api/save-results', {
             method: 'POST',
@@ -15,7 +20,7 @@ const jsPsych = initJsPsych({
             },
             body: JSON.stringify({
                 participant_id: subject_id,
-                resultats: donneesDeLexperience
+                resultats: donneesPropres
             })
         })
         .then(response => {
