@@ -41,16 +41,20 @@ const jsPsych = initJsPsych({
     }
 });
 
-// Ajouter cet identifiant à toutes les lignes de données
-jsPsych.data.addProperties({
-    participant_id: subject_id
-});
-
 //  Attribution des touches
-const attrKey = 'P';
-const unattrKey = 'E';
-const attrDisplay = 'P';
-const unattrDisplay = 'E';
+// Math.random() > 0.5
+const randomKey = Math.random() > 0.5;
+const attrKey = randomKey ? 'p' : 'e';
+const unattrKey = randomKey ? 'e' : 'p';
+const attrDisplay = attrKey.toUpperCase();
+const unattrDisplay = unattrKey.toUpperCase();
+
+// Data à envoyer au serveur 
+jsPsych.data.addProperties({
+    participant_id: subject_id,
+    touche_attractif: attrDisplay,
+    touche_non_attractif: unattrDisplay
+});
 
 // Fonction asynchrone pour charger le JSON et lancer l'expérience (se fait en même temps que le reste)
 async function runExperiment() {
@@ -185,7 +189,8 @@ async function runExperiment() {
             trial_duration: 300,
             data: { task: 'fixation' }
         };
-        // mot à valence (neg or pos)
+
+        // mot à valence (neg or pos or neutral)
         const word = {
             type: jsPsychHtmlKeyboardResponse,
             stimulus: function() {
@@ -217,7 +222,7 @@ async function runExperiment() {
             }
         };
         
-        // test valence
+        // Procédure, déroulement de l'expérience
         const procedure = {
             timeline: [fixation, word, fixation, target],
             timeline_variables: stimuli,
