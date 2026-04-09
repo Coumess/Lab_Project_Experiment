@@ -56,13 +56,100 @@ jsPsych.data.addProperties({
     touche_non_attractif: unattrDisplay
 });
 
+// Fonction pour mélanger nos visages et mots 
+function shuffle(array) {
+    let newArray = [...array];
+    for (let i = newArray.length - 1; i > 0; i--) {
+        const j = Math.floor(Math.random() * (i + 1));
+        [newArray[i], newArray[j]] = [newArray[j], newArray[i]];
+    }
+    return newArray;
+}
+
+function genererStimuli() {
+    let stimuliFinaux = [];
+    let visagesA = shuffle(visagesAttracNames);
+    let visagesU = shuffle(visagesUnattracNames);
+    let motsP = shuffle(motsPositifs);
+    let motsN = shuffle(motsNeutres);
+    let motsNeg = shuffle(motsNegatifs);
+
+    for (let i = 0; i < 30; i++) {
+        let valence, motChoisi;
+        if (i < 10)      { valence = 'positif'; motChoisi = motsP[i]; }
+        else if (i < 20) { valence = 'neutre';  motChoisi = motsN[i - 10]; }
+        else             { valence = 'negatif'; motChoisi = motsNeg[i - 20]; }
+
+        stimuliFinaux.push({
+            target_image: visagesA[i],
+            baseline_attrac: 'Attractif',
+            valence: valence,
+            word: motChoisi
+        });
+    }
+
+    for (let i = 0; i < 30; i++) {
+        let valence, motChoisi;
+        if (i < 10)      { valence = 'positif'; motChoisi = motsP[i % 10]; }
+        else if (i < 20) { valence = 'neutre';  motChoisi = motsN[(i - 10) % 10]; }
+        else             { valence = 'negatif'; motChoisi = motsNeg[(i - 20) % 10]; }
+
+        stimuliFinaux.push({
+            target_image: visagesU[i],
+            baseline_attrac: 'Unattractif',
+            valence: valence,
+            word: motChoisi
+        });
+    }
+    return stimuliFinaux;
+}
+
+
+// Constante des stimulis
+const motsPositifs = [
+    "Chaleureux", "Bienveillant", "Heureux", "Ouvert", "Positif", 
+    "Fascinant", "Respectueux", "Sincère", "Honnête", "Intelligent", 
+    "Brillant", "Juste", "Drôle", "Tolérant", "Généreux", 
+    "Talentueux", "Intéressant", "Génial", "Formidable", "Merveilleux"
+];
+
+const motsNeutres = [
+    "Expansif", "Solitaire", "Sceptique", "Ordinaire", "Systématique", 
+    "Excitable", "Excité", "Troublant", "Nostalgique", "Réservé", 
+    "Traditionnel", "Rebelle", "Théâtral", "Silencieux", "Classique", 
+    "Contrôlé", "Clownesque", "Normal", "Obéissant", "Flatteur"
+];
+
+const motsNegatifs = [
+    "Raciste", "Ignoble", "Malhonnête", "Égoïste", "Haineux", 
+    "Méprisant", "Irrespectueux", "Violent", "Méchant", "Odieux", 
+    "Dégoûtant", "Cruel", "Démoralisant", "Injuste", "Déprimant", 
+    "Insultant", "Hypocrite", "Intolérant", "Désagréable", "Menteur"
+];
+
+const visagesAttracNames = [
+    "face_attrac/AF-218.jpg", "face_attrac/AF-242.jpg", "face_attrac/AF-244.jpg", "face_attrac/AF-255.jpg", "face_attrac/BF-002.jpg",
+    "face_attrac/BF-013.jpg", "face_attrac/BF-214.jpg", "face_attrac/BF-216.jpg", "face_attrac/BF-217.jpg", "face_attrac/BF-218.jpg",
+    "face_attrac/BF-229.jpg", "face_attrac/BF-232.jpg", "face_attrac/BF-233.jpg", "face_attrac/BF-240.jpg", "face_attrac/BF-241.jpg",
+    "face_attrac/BF-244.jpg", "face_attrac/BM-043.jpg", "face_attrac/LF-243.jpg", "face_attrac/LF-249.jpg", "face_attrac/LM-224.jpg",
+    "face_attrac/WF-003.jpg", "face_attrac/WF-012.jpg", "face_attrac/WF-022.jpg", "face_attrac/WF-024.jpg", "face_attrac/WF-027.jpg",
+    "face_attrac/WF-205.jpg", "face_attrac/WF-220.jpg", "face_attrac/WF-233.jpg", "face_attrac/WF-238.jpg", "face_attrac/WF-242.jpg"
+];
+
+const visagesUnattracNames = [
+    "face_unnattrac/AM-212.jpg", "face_unnattrac/AM-224.jpg", "face_unnattrac/AM-226.jpg", "face_unnattrac/AM-233.jpg", "face_unnattrac/BF-007.jpg",
+    "face_unnattrac/BF-029.jpg", "face_unnattrac/BF-038.jpg", "face_unnattrac/BF-044.jpg", "face_unnattrac/BF-200.jpg", "face_unnattrac/BF-224.jpg",
+    "face_unnattrac/BF-227.jpg", "face_unnattrac/BM-213.jpg", "face_unnattrac/BM-219.jpg", "face_unnattrac/LF-220.jpg", "face_unnattrac/LM-203.jpg",
+    "face_unnattrac/LM-209.jpg", "face_unnattrac/LM-240.jpg", "face_unnattrac/LM-251.jpg", "face_unnattrac/WF-002.jpg", "face_unnattrac/WF-010.jpg",
+    "face_unnattrac/WF-026.jpg", "face_unnattrac/WF-204.jpg", "face_unnattrac/WF-210.jpg", "face_unnattrac/WF-248.jpg", "face_unnattrac/WF-250.jpg",
+    "face_unnattrac/WM-201.jpg", "face_unnattrac/WM-206.jpg", "face_unnattrac/WM-215.jpg", "face_unnattrac/WM-228.jpg", "face_unnattrac/WM-236.jpg"
+];
+
 // Fonction asynchrone pour charger le JSON et lancer l'expérience (se fait en même temps que le reste)
-async function runExperiment() {
+function runExperiment() {
     try {
-        // Chargement du fichier JSON
-        const response = await fetch('stimuli.json');
-        if (!response.ok) throw new Error("Erreur lors du chargement de stimuli.json");
-        const stimuli = await response.json();
+        // Fais le mélange
+        const stimuli = genererStimuli()
 
         // Préchargement des images (peut-être à changer pour randomize les trials)
         const preloadImages = stimuli.map(trial => trial.target_image);
@@ -154,8 +241,8 @@ async function runExperiment() {
                     <p>Dans ces tâches, vous allez juger un visage d'une personne et indiquer s'il est attractif ou non.</p>
                     <p>Votre objectif est de juger <strong style="color: red">le plus rapidement possible</strong> si vous trouvez ce visage <strong>attractif</strong> ou non</strong>.</p>
                     <br>
-                    <p>Si le visage est <strong>Attractif</strong>, appuyez sur la touche <strong style="color: red; font-size: 24px;">${attrDisplay.toUpperCase()}</strong>.</p>
-                    <p>Si le visage est <strong>Non attractif</strong>, appuyez sur la touche <strong style="color: red; font-size: 24px;">${unattrDisplay.toUpperCase()}</strong>.</p>
+                    <p>Si le visage est <strong style="color: red; font-size: 34px;>Attractif</strong>, appuyez sur la touche <strong style="color: red; font-size: 34px;">${attrDisplay.toUpperCase()}</strong>.</p>
+                    <p>Si le visage est <strong style="color: green; font-size: 34px;>Non attractif</strong>, appuyez sur la touche <strong style="color: green; font-size: 34px;">${unattrDisplay.toUpperCase()}</strong>.</p>
                     <br>
                     <p>Placez vos doigts sur les touches ${attrDisplay.toUpperCase()} et ${unattrDisplay.toUpperCase()} et appuyez sur n'importe quelle touche pour commencer.</p>
                 </div>
@@ -171,8 +258,8 @@ async function runExperiment() {
                     <p>Dans cette tâche, vous allez voir un mot apparaître brièvement, suivi du visage d'une personne.</p>
                     <p>Votre objectif est de juger <strong style="color: red">le plus rapidement possible</strong> si vous trouvez ce visage <strong>attractif</strong> ou non</strong>.</p>
                     <br>
-                    <p>Si le visage est <strong>Attractif</strong>, appuyez sur la touche <strong style="color: red; font-size: 24px;">${attrDisplay.toUpperCase()}</strong>.</p>
-                    <p>Si le visage est <strong>Non attractif</strong>, appuyez sur la touche <strong style="color: red; font-size: 24px;">${unattrDisplay.toUpperCase()}</strong>.</p>
+                    <p>Si le visage est <strong style="color: red; font-size: 34px;>Attractif</strong>, appuyez sur la touche <strong style="color: red; font-size: 34px;">${attrDisplay.toUpperCase()}</strong>.</p>
+                    <p>Si le visage est <strong style="color: green; font-size: 34px;>Non attractif</strong>, appuyez sur la touche <strong style="color: green; font-size: 34px;">${unattrDisplay.toUpperCase()}</strong>.</p>
                     <br>
                     <p>Appuyez sur n'importe quelle touche pour commencer.</p>
                 </div>
@@ -210,7 +297,8 @@ async function runExperiment() {
             data: {
                 task: 'target',
                 word: jsPsych.timelineVariable('word'),
-                valence: jsPsych.timelineVariable('valence')
+                valence: jsPsych.timelineVariable('valence'),
+                baseline_attrac: jsPsych.timelineVariable('baseline_attrac')
             },
             on_finish: function(data) {
                 if (data.response === attrKey) {
