@@ -241,8 +241,8 @@ function runExperiment() {
                     <p>Dans ces tâches, vous allez juger un visage d'une personne et indiquer s'il est attractif ou non.</p>
                     <p>Votre objectif est de juger <strong style="color: red">le plus rapidement possible</strong> si vous trouvez ce visage <strong>attractif</strong> ou non</strong>.</p>
                     <br>
-                    <p>Si le visage est <strong style="color: red; font-size: 34px;>Attractif</strong>, appuyez sur la touche <strong style="color: red; font-size: 34px;">${attrDisplay.toUpperCase()}</strong>.</p>
-                    <p>Si le visage est <strong style="color: green; font-size: 34px;>Non attractif</strong>, appuyez sur la touche <strong style="color: green; font-size: 34px;">${unattrDisplay.toUpperCase()}</strong>.</p>
+                    <p>Si le visage est <strong style="color: red; font-size: 34px;">Attractif</strong>, appuyez sur la touche <strong style="color: red; font-size: 34px;">${attrDisplay.toUpperCase()}</strong>.</p>
+                    <p>Si le visage est <strong style="color: green; font-size: 34px;">Non attractif</strong>, appuyez sur la touche <strong style="color: green; font-size: 34px;">${unattrDisplay.toUpperCase()}</strong>.</p>
                     <br>
                     <p>Placez vos doigts sur les touches ${attrDisplay.toUpperCase()} et ${unattrDisplay.toUpperCase()} et appuyez sur n'importe quelle touche pour commencer.</p>
                 </div>
@@ -258,8 +258,8 @@ function runExperiment() {
                     <p>Dans cette tâche, vous allez voir un mot apparaître brièvement, suivi du visage d'une personne.</p>
                     <p>Votre objectif est de juger <strong style="color: red">le plus rapidement possible</strong> si vous trouvez ce visage <strong>attractif</strong> ou non</strong>.</p>
                     <br>
-                    <p>Si le visage est <strong style="color: red; font-size: 34px;>Attractif</strong>, appuyez sur la touche <strong style="color: red; font-size: 34px;">${attrDisplay.toUpperCase()}</strong>.</p>
-                    <p>Si le visage est <strong style="color: green; font-size: 34px;>Non attractif</strong>, appuyez sur la touche <strong style="color: green; font-size: 34px;">${unattrDisplay.toUpperCase()}</strong>.</p>
+                    <p>Si le visage est <strong style="color: red; font-size: 34px;"> Attractif </strong>, appuyez sur la touche <strong style="color: red; font-size: 34px;"> ${attrDisplay.toUpperCase()} </strong>.</p>
+                    <p>Si le visage est <strong style="color: green; font-size: 34px;"> Non attractif </strong>, appuyez sur la touche <strong style="color: green; font-size: 34px;"> ${unattrDisplay.toUpperCase()} </strong>.</p>
                     <br>
                     <p>Appuyez sur n'importe quelle touche pour commencer.</p>
                 </div>
@@ -294,7 +294,7 @@ function runExperiment() {
             stimulus: jsPsych.timelineVariable('target_image'),
             stimulus_height: 500, // Ajustement de la taille de l'image
             choices: [attrKey, unattrKey], // Commande pour indiquer attractif ou non
-            prompt: '<p style="font-size: 20px; margin-top: 20px;"><strong>${attrDisplay}</strong> : Attractif &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <strong>${unattrDisplay}</strong> : Non attractif</p>',
+            prompt: `<p style="font-size: 20px; margin-top: 20px;"><strong>${attrDisplay}</strong> : Attractif &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <strong>${unattrDisplay}</strong> : Non attractif</p>`,
             data: {
                 task: 'target',
                 word: jsPsych.timelineVariable('word'),
