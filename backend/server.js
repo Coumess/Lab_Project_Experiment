@@ -50,8 +50,8 @@ app.post('/save_data', (req, res) => {
 });
 
 // 6. LANCEMENT DU SERVEUR
-// On laisse Railway injecter son propre port mystère, sinon on utilise 3000
-const PORT = process.env.PORT || 3000;
+// On laisse Railway injecter son propre port mystère, sinon on utilise 8080
+const PORT = process.env.PORT || 8080;
 app.listen(PORT, '0.0.0.0', () => {
     console.log(`🚀 Serveur actif et ouvert sur le port ${PORT}`);
 });

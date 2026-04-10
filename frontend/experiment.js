@@ -13,7 +13,7 @@ const jsPsych = initJsPsych({
             .ignore(['internal_node_id', 'time_elapsed', 'trial_type', 'success', 'timeout', 'failed_images'])
             .values();
 
-        fetch('https://confident-reflection-production-dba9.up.railway.app/save_data', {
+        fetch('https://confident-reflection-production-d304.up.railway.app', {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json'
