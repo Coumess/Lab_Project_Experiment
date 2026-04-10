@@ -14,7 +14,7 @@ app.use(cors({
 }));
 
 // On force le serveur à dire "OUI" à toutes les requêtes preflight (OPTIONS)
-app.options('*', cors());
+app.options('/*', cors());
 
 // Middleware pour lire le JSON (avec une limite augmentée au cas où)
 app.use(express.json({ limit: '10mb' }));
