@@ -18,7 +18,7 @@ if (!fs.existsSync(dataFolder)) {
 }
 
 // La route qui reçoit les données à la fin de l'expérience
-app.post('/api/save-results', (req, res) => {
+app.post('/save_data', (req, res) => {
     // On récupère l'ID du participant et les résultats depuis la requête
     const participantId = req.body.participant_id;
     const donnees = req.body.resultats;
@@ -45,7 +45,7 @@ app.post('/api/save-results', (req, res) => {
 });
 
 // Lancement du serveur
-const PORT = 3000;
+const PORT = process.env.PORT || 3000;
 app.listen(PORT, () => {
     console.log(`🚀 Serveur actif sur http://localhost:${PORT}`);
     console.log(`📁 Les fichiers seront sauvegardés dans le dossier : ${dataFolder}`);
