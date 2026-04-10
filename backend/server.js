@@ -6,7 +6,15 @@ const path = require('path');
 const app = express();
 
 // Middleware pour autoriser ton site web à parler au serveur
-app.use(cors());
+// Configuration CORS ultra-stricte et explicite
+app.use(cors({
+    origin: 'https://attractive-exp.up.railway.app', // On autorise uniquement VOTRE frontend
+    methods: ['GET', 'POST', 'OPTIONS'],             // On autorise l'envoi de données et le preflight
+    allowedHeaders: ['Content-Type']                 // On autorise le format JSON
+}));
+
+// On force le serveur à dire "OUI" à toutes les requêtes preflight (OPTIONS)
+app.options('*', cors());
 
 // Middleware pour lire le JSON (avec une limite augmentée au cas où)
 app.use(express.json({ limit: '10mb' }));
