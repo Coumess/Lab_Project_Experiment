@@ -194,7 +194,7 @@ function runExperiment() {
                 <div style="text-align: left; margin: 20px auto; max-width: 400px; background: white; padding: 20px; border-radius: 8px; color: black;">
                     <p>
                         <label for="age"><strong>Âge :</strong></label><br>
-                        <input type="number" id="age" name="age" required min="18" max="99" style="width: 100%; padding: 8px; margin-top: 5px;">
+                        <input type="number" id="age" name="age" required min="18" max="101" style="width: 100%; padding: 8px; margin-top: 5px;">
                     </p>
                     <fieldset style="border: none; padding: 0; margin: 0 0 15px 0;">
                         <legend style="font-weight: bold; margin-bottom: 5px;">Sexe :</legend>
