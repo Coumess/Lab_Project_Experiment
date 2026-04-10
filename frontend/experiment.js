@@ -44,8 +44,8 @@ const jsPsych = initJsPsych({
 //  Attribution des touches
 // Math.random() > 0.5
 const randomKey = Math.random() > 0.5;
-const attrKey = randomKey ? 'p' : 'e';
-const unattrKey = randomKey ? 'e' : 'p';
+const attrKey = randomKey ? 's' : 'l';
+const unattrKey = randomKey ? 'l' : 's';
 const attrDisplay = attrKey.toUpperCase();
 const unattrDisplay = unattrKey.toUpperCase();
 
@@ -294,6 +294,7 @@ function runExperiment() {
             stimulus: jsPsych.timelineVariable('target_image'),
             stimulus_height: 500, // Ajustement de la taille de l'image
             choices: [attrKey, unattrKey], // Commande pour indiquer attractif ou non
+            prompt: '<p style="font-size: 20px; margin-top: 20px;"><strong>${attrDisplay}</strong> : Attractif &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <strong>${unattrDisplay}</strong> : Non attractif</p>',
             data: {
                 task: 'target',
                 word: jsPsych.timelineVariable('word'),
