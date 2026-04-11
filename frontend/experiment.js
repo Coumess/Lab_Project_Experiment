@@ -171,7 +171,7 @@ function runExperiment() {
                         <li>Vous êtes libre d'interrompre l'expérience à tout moment en fermant simplement cette fenêtre, sans enregistrement de vos données.</li>
                         <li>Toutes les données recueillies seront traitées de manière strictement <strong>anonyme et confidentielle</strong>.</li>
                         <li> Vous acceptez que vos réponses à l'expérience posées soient exploitées dans le cadre de l'étude.</li>
-                        <li>Cette expérience dure environ x à x minutes.</li>
+                        <li>Cette expérience dure environ 5 à 10 minutes.</li>
                     </ul>
                     <hr style="margin: 20px 0;">
                     <p style="text-align: center;">
@@ -321,6 +321,19 @@ function runExperiment() {
             timeline: [fixation, word, fixation, target],
             timeline_variables: stimuli,
             randomize_order: true // randomize les conditions x
+        };
+
+        const remerciement = {type: jsPsychSurveyHtmlForm,
+            preamble: '<h2>En vous remerciant pour votre participation</h2>',
+            html: `
+                <div style="text-align: left; margin: 20px auto; max-width: 400px; background: white; padding: 20px; border-radius: 8px; color: black;">
+                    <p>
+                        Si vous souhaitez nous contacter pour des informations ou des remarques voici nos coordoonnées
+                    </p>
+                    <p> Alexandre Coumes : <strong> alexandre.coumes@grenoble-inp.org </strong> </p>
+                    <p> Charles Angely : <strong> charles.angely@grenoble-inp.org </strong> </p>
+                </div>
+            `,
         };
 
         // Scénario
