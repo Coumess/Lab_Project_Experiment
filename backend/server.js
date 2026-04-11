@@ -27,7 +27,7 @@ app.get('/', (req, res) => {
     res.send("<h1>Le serveur backend fonctionne et est bien connecté à Internet ! ✅</h1>");
 });
 
-// 5. LA ROUTE DE SAUVEGARDE
+// 5. LA ROUTE DE SAUVEGARDE (Celle que le frontend utilise)
 app.post('/save_data', (req, res) => {
     const participantId = req.body.participant_id;
     const donnees = req.body.resultats;
@@ -48,6 +48,47 @@ app.post('/save_data', (req, res) => {
         res.status(200).send('Sauvegarde réussie');
     });
 });
+
+// ==========================================
+// 🚨 NOUVEAU : LES ROUTES D'ADMINISTRATION 🚨
+// ==========================================
+
+// 5.1 PAGE ADMIN : Voir tous les fichiers sauvegardés
+app.get('/admin/fichiers', (req, res) => {
+    fs.readdir(dataFolder, (err, files) => {
+        if (err) {
+            return res.status(500).send("Erreur lors de la lecture du dossier");
+        }
+        
+        let html = '<h1 style="font-family: sans-serif;">Fichiers de données</h1>';
+        html += '<ul style="font-family: monospace; font-size: 18px;">';
+        
+        if (files.length === 0) {
+            html += '<li>Aucun fichier pour le moment.</li>';
+        } else {
+            files.forEach(file => {
+                html += `<li style="margin-bottom: 10px;">
+                            <a href="/admin/telecharger/${file}" style="color: blue;">📥 Télécharger ${file}</a>
+                         </li>`;
+            });
+        }
+        html += '</ul>';
+        res.send(html);
+    });
+});
+
+// 5.2 ROUTE DE TÉLÉCHARGEMENT : Quand on clique sur le lien
+app.get('/admin/telecharger/:nomFichier', (req, res) => {
+    const filePath = path.join(dataFolder, req.params.nomFichier);
+    res.download(filePath, (err) => {
+        if (err) {
+            console.error("Erreur de téléchargement :", err);
+            res.status(404).send("Fichier introuvable");
+        }
+    });
+});
+
+// ==========================================
 
 // 6. LANCEMENT DU SERVEUR
 // On laisse Railway injecter son propre port mystère, sinon on utilise 8080

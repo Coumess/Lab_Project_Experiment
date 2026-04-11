@@ -206,13 +206,13 @@ function runExperiment() {
                         <label for="education"><strong>Niveau d'étude :</strong></label><br>
                         <select id="education" name="education" required style="width: 100%; padding: 8px; margin-top: 5px;">
                             <option value="">-- Sélectionnez une option --</option>
+                            <option value="Rien">Pas de diplôme</option>
                             <option value="Brevet">Brevet des collèges</option>
                             <option value="Bac">Baccalauréat</option>
                             <option value="Bac+2">Bac +2 (BTS, DUT...)</option>
                             <option value="Bac+3">Bac +3 (Licence...)</option>
                             <option value="Bac+5">Bac +5 (Master...)</option>
                             <option value="Doctorat">Doctorat</option>
-                            <option value="Autre">Autre</option>
                         </select>
                     </p>
                     <p>
@@ -254,8 +254,8 @@ function runExperiment() {
             type: jsPsychHtmlKeyboardResponse,
             stimulus: `
                 <div style="max-width: 800px; text-align: center;">
-                    <h1>Expérience</h1>
-                    <p>Dans cette tâche, vous allez voir un mot apparaître brièvement, suivi du visage d'une personne.</p>
+                    <h1>Le plus rapidement possible</h1>
+                    <p>Essayer de répondre le plus vite possible.</p>
                     <p>Votre objectif est de juger <strong style="color: red">le plus rapidement possible</strong> si vous trouvez ce visage <strong>attractif</strong> ou non</strong>.</p>
                     <br>
                     <p>Si le visage est <strong style="color: red; font-size: 34px;"> Attractif </strong>, appuyez sur la touche <strong style="color: red; font-size: 34px;"> ${attrDisplay.toUpperCase()} </strong>.</p>
@@ -294,7 +294,12 @@ function runExperiment() {
             stimulus: jsPsych.timelineVariable('target_image'),
             stimulus_height: 500, // Ajustement de la taille de l'image
             choices: [attrKey, unattrKey], // Commande pour indiquer attractif ou non
-            prompt: `<p style="font-size: 20px; margin-top: 20px;"><strong>${attrDisplay}</strong> : Attractif &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <strong>${unattrDisplay}</strong> : Non attractif</p>`,
+            prompt: `
+        <div style="position: absolute; left: 10%; top: 50%; transform: translateY(-50%); font-size: 20px; text-align: left;">
+            <p><strong>${attrDisplay}</strong> : Attractif</p>
+            <br><br>
+            <p><strong>${unattrDisplay}</strong> : Non attractif</p>
+        </div>`,
             data: {
                 task: 'target',
                 word: jsPsych.timelineVariable('word'),
