@@ -88,6 +88,32 @@ app.get('/admin/telecharger/:nomFichier', (req, res) => {
     });
 });
 
+// --- ROUTE SECRÈTE POUR TÉLÉCHARGER LES DONNÉES ---
+app.get('/api/admin/download-all', (req, res) => {
+    // On lit tous les fichiers dans le dossier data
+    fs.readdir(dataFolder, (err, files) => {
+        if (err) {
+            return res.status(500).send("Erreur lors de la lecture du dossier");
+        }
+
+        // On filtre pour ne garder que les .json
+        const jsonFiles = files.filter(f => f.endsWith('.json'));
+        let allData = [];
+
+        // On assemble le tout
+        jsonFiles.forEach(file => {
+            const filePath = path.join(dataFolder, file);
+            const content = fs.readFileSync(filePath, 'utf-8');
+            allData.push(JSON.parse(content));
+        });
+
+        // On envoie le gros tableau final au navigateur
+        res.setHeader('Content-Type', 'application/json');
+        res.setHeader('Content-Disposition', 'attachment; filename="toutes_les_donnees.json"');
+        res.status(200).send(JSON.stringify(allData, null, 2));
+    });
+});
+
 // ==========================================
 
 // 6. LANCEMENT DU SERVEUR
