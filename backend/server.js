@@ -156,6 +156,36 @@ app.get('/api/admin/extract', checkAuth, (req, res) => {
     });
 });
 
+// --- NOUVELLE ROUTE : SAUVEGARDE TOTALE (URGENCE / BACKUP) ---
+// Cette route télécharge TOUT depuis le début, sans rien modifier au serveur.
+app.get('/api/admin/extract-all', checkAuth, (req, res) => {
+    
+    const timestamp = Date.now();
+    
+    // Prépare le téléchargement du ZIP
+    res.setHeader('Content-Type', 'application/zip');
+    res.setHeader('Content-Disposition', `attachment; filename="sauvegarde_COMPLETE_${timestamp}.zip"`);
+
+    const archive = archiver('zip', { zlib: { level: 9 } });
+    
+    archive.on('error', (err) => {
+        console.error("Erreur lors de la sauvegarde totale :", err);
+        res.status(500).send({ error: err.message });
+    });
+
+    // Connecte l'archive au téléchargement
+    archive.pipe(res);
+
+    // On ajoute l'intégralité du dossier data (Nouveaux JSON + Dossier Archives)
+    // Le "false" évite de créer un dossier parent "data" dans le zip
+    archive.directory(dataFolder, false);
+
+    // Lance la création du zip et le téléchargement
+    archive.finalize();
+    
+    console.log(`🚑 Sauvegarde TOTALE demandée et téléchargée !`);
+});
+
 // ==========================================
 
 // 6. LANCEMENT DU SERVEUR
