@@ -5,7 +5,7 @@ const subject_id = Math.random().toString(36).substring(2, 10);
 // INITIALISATION DE jsPsych
 const jsPsych = initJsPsych({
     on_finish: function() {
-        // Envoi des données au serveur à la fin de l'expérience
+        // 1. On récupère les données propres
         const donneesPropres = jsPsych.data.get()
             .filterCustom(function(trial) {
                 return trial.task === 'target' || trial.task === 'demographics';
@@ -13,6 +13,7 @@ const jsPsych = initJsPsych({
             .ignore(['internal_node_id', 'time_elapsed', 'trial_type', 'success', 'timeout', 'failed_images'])
             .values();
 
+        // 2. On envoie au serveur
         fetch('https://confident-reflection-production-d304.up.railway.app/save_data', {
             method: 'POST',
             headers: {
@@ -24,19 +25,39 @@ const jsPsych = initJsPsych({
             })
         })
         .then(response => {
-            const display = document.querySelector('.jspsych-display-element');
             if (response.ok) {
-                display.innerHTML = "<h1 style='color:white; text-align:center; margin-top:20vh;'>Merci pour votre participation !<br>Les données ont été sauvegardées.</h1>";
+                document.body.innerHTML = `
+                    <div style="display: flex; flex-direction: column; align-items: center; justify-content: center; height: 100vh; background-color: #f4f4f9; color: #333; font-family: Arial, sans-serif; margin: 0;">
+                        
+                        <h1 style="color: #2c3e50;">Merci pour votre participation !</h1>
+                        <p style="font-size: 18px;">Vos données ont bien été sauvegardées.</p>
+                        
+                        <div style="background: white; padding: 30px; border-radius: 10px; box-shadow: 0 4px 15px rgba(0,0,0,0.1); margin-top: 40px; text-align: center; border-top: 5px solid #3498db;">
+                            <h2 style="margin-top: 0; color: #2c3e50;">Nous contacter</h2>
+                            <p style="margin-bottom: 20px;">Pour toute information ou remarque, voici nos coordonnées :</p>
+                            <p style="margin: 5px 0;">Alexandre Coumes : <strong>alexandre.coumes@grenoble-inp.org</strong></p>
+                            <p style="margin: 5px 0;">Charles Angely : <strong>charles.angely@grenoble-inp.org</strong></p>
+                        </div>
+
+                    </div>
+                `;
             } else {
-                display.innerHTML = "<h1 style='color:red; text-align:center; margin-top:20vh;'>Erreur lors de la sauvegarde (Le serveur a refusé les données).</h1>";
+                document.body.innerHTML = `
+                    <div style="display: flex; flex-direction: column; align-items: center; justify-content: center; height: 100vh; background-color: #f4f4f9; color: #333; font-family: Arial, sans-serif; margin: 0;">
+                        <h1 style="color: #e74c3c;">Erreur lors de la sauvegarde</h1>
+                        <p>Le serveur a refusé les données. Veuillez contacter les chercheurs.</p>
+                    </div>
+                `;
             }
         })
         .catch(error => {
             console.error('Erreur réseau:', error);
-            const display = document.querySelector('.jspsych-display-element');
-            if (display) {
-                display.innerHTML = "<h1 style='color:red; text-align:center; margin-top:20vh;'>Erreur de connexion au serveur.<br>Avez-vous bien lancé 'node server.js' dans le terminal ?</h1>";
-            }
+            document.body.innerHTML = `
+                <div style="display: flex; flex-direction: column; align-items: center; justify-content: center; height: 100vh; background-color: #f4f4f9; color: #333; font-family: Arial, sans-serif; margin: 0;">
+                    <h1 style="color: #e74c3c;">Erreur de connexion au serveur</h1>
+                    <p>Veuillez vérifier votre connexion internet.</p>
+                </div>
+            `;
         });
     }
 });
@@ -236,15 +257,13 @@ function runExperiment() {
         const instructions = {
             type: jsPsychHtmlKeyboardResponse,
             stimulus: `
-                <div style="max-width: 800px; text-align: center;">
-                    <h1>Bienvenue dans cette étude</h1>
-                    <p>Dans ces tâches, vous allez juger un visage d'une personne et indiquer s'il est attractif ou non.</p>
-                    <p>Votre objectif est de juger <strong style="color: red">le plus rapidement possible</strong> si vous trouvez ce visage <strong>attractif</strong> ou non</strong>.</p>
+                <div style="max-width: 800px; text-align: center; font-size: 18px; line-height: 1.6;">
+                    <h1 style="color: #2c3e50;">Bienvenue dans cette étude</h1>
+                    <p>Cette recherche porte sur <strong>les premières impressions visuelles</strong> et la manière dont nous percevons les visages au quotidien.</p>
+                    <p>Dans quelques instants, vous allez voir défiler une série de visages sur votre écran. Avant chaque visage, un mot apparaîtra très brièvement au centre de l'écran.</p>
+                    <p>Votre tâche consistera uniquement à vous concentrer sur le <strong>visage</strong> pour l'évaluer.</p>
                     <br>
-                    <p>Si le visage est <strong style="color: red; font-size: 34px;">Attractif</strong>, appuyez sur la touche <strong style="color: red; font-size: 34px;">${attrDisplay.toUpperCase()}</strong>.</p>
-                    <p>Si le visage est <strong style="color: green; font-size: 34px;">Non attractif</strong>, appuyez sur la touche <strong style="color: green; font-size: 34px;">${unattrDisplay.toUpperCase()}</strong>.</p>
-                    <br>
-                    <p>Placez vos doigts sur les touches ${attrDisplay.toUpperCase()} et ${unattrDisplay.toUpperCase()} et appuyez sur n'importe quelle touche pour commencer.</p>
+                    <p style="color: #7f8c8d;"><i>Appuyez sur n'importe quelle touche pour découvrir les consignes de la tâche.</i></p>
                 </div>
             `
         };
@@ -253,15 +272,16 @@ function runExperiment() {
         const instru_exp = {
             type: jsPsychHtmlKeyboardResponse,
             stimulus: `
-                <div style="max-width: 800px; text-align: center;">
-                    <h1>Le plus rapidement possible</h1>
-                    <p>Essayer de répondre le plus vite possible.</p>
-                    <p>Votre objectif est de juger <strong style="color: red">le plus rapidement possible</strong> si vous trouvez ce visage <strong>attractif</strong> ou non</strong>.</p>
+                <div style="max-width: 800px; text-align: center; font-size: 18px; line-height: 1.6;">
+                    <h1>Consignes de l'expérience</h1>
+                    <p>Dès qu'un visage apparaît à l'écran, votre objectif est de juger <strong>le plus rapidement possible</strong> si vous le trouvez attractif ou non.</p>
+                    <br>
+                    <p>Pour la réussite de l'étude, il est crucial de répondre de manière <strong>extrêmement rapide</strong>.</p>
                     <br>
                     <p>Si le visage est <strong style="color: red; font-size: 34px;"> Attractif </strong>, appuyez sur la touche <strong style="color: red; font-size: 34px;"> ${attrDisplay.toUpperCase()} </strong>.</p>
                     <p>Si le visage est <strong style="color: green; font-size: 34px;"> Non attractif </strong>, appuyez sur la touche <strong style="color: green; font-size: 34px;"> ${unattrDisplay.toUpperCase()} </strong>.</p>
                     <br>
-                    <p>Appuyez sur n'importe quelle touche pour commencer.</p>
+                    <p style="color: #7f8c8d;"><i>Appuyez sur l'une de ces deux touches pour commencer l'expérience.</i></p>
                 </div>
             `
         };
@@ -287,6 +307,37 @@ function runExperiment() {
             trial_duration: 800,
             data: { task: 'word' }
         };
+
+        // Le message à afficher si trop long
+        const timeout_message = {
+            type: jsPsychHtmlKeyboardResponse,
+            stimulus: `
+                <div style="display: flex; flex-direction: column; align-items: center; justify-content: center; height: 100vh;">
+                    <h1 style="color: red; font-size: 40px;">Temps écoulé !</h1>
+                    <p style="font-size: 24px;">Essayez de répondre plus rapidement.</p>
+                </div>
+            `,
+            choices: "NO_KEYS",
+            trial_duration: 2000, // Le message reste affiché 2 secondes
+            data: { task: 'timeout_warning' }
+        };
+
+        // La condition : on l'affiche seulement si la réponse précédente est "null"
+        const if_timeout = {
+            timeline: [timeout_message],
+            conditional_function: function() {
+                // On récupère les données de l'essai qui vient juste de se terminer (le target)
+                const last_trial = jsPsych.data.get().last(1).values()[0];
+                
+                // Si la réponse est null (timeout), on retourne true -> le message s'affiche
+                // Sinon on retourne false -> le message est ignoré, on passe à la suite
+                if (last_trial.response === null) {
+                    return true;
+                } else {
+                    return false;
+                }
+            }
+        };
         
         // Face que l'on présente 
         const target = {
@@ -294,6 +345,7 @@ function runExperiment() {
             stimulus: jsPsych.timelineVariable('target_image'),
             stimulus_height: 500, // Ajustement de la taille de l'image
             choices: [attrKey, unattrKey], // Commande pour indiquer attractif ou non
+            trial_duration : 1500,
             prompt: `
         <div style="position: absolute; left: 10%; top: 50%; transform: translateY(-50%); font-size: 20px; text-align: left;">
             <p><strong>${attrDisplay}</strong> : Attractif</p>
@@ -311,6 +363,8 @@ function runExperiment() {
                     data.response_meaning = 'Attractif';
                 } else if (data.response === unattrKey) {
                     data.response_meaning = 'Non attractif';
+                } else if (data.response === null) {
+                    data.response_meaning = 'Temps écoulé'
                 }
                 data.mapping_condition = `Attr=${attrKey.toUpperCase()} | Unattr=${unattrKey.toUpperCase()}`;
             }
@@ -318,22 +372,9 @@ function runExperiment() {
         
         // Procédure, déroulement de l'expérience
         const procedure = {
-            timeline: [fixation, word, fixation, target],
+            timeline: [fixation, word, fixation, target, if_timeout],
             timeline_variables: stimuli,
             randomize_order: true // randomize les conditions x
-        };
-
-        const remerciement = {type: jsPsychSurveyHtmlForm,
-            preamble: '<h2>En vous remerciant pour votre participation</h2>',
-            html: `
-                <div style="text-align: left; margin: 20px auto; max-width: 400px; background: white; padding: 20px; border-radius: 8px; color: black;">
-                    <p>
-                        Si vous souhaitez nous contacter pour des informations ou des remarques voici nos coordoonnées
-                    </p>
-                    <p> Alexandre Coumes : <strong> alexandre.coumes@grenoble-inp.org </strong> </p>
-                    <p> Charles Angely : <strong> charles.angely@grenoble-inp.org </strong> </p>
-                </div>
-            `,
         };
 
         // Scénario
