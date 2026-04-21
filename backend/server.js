@@ -2,6 +2,7 @@ const express = require('express');
 const cors = require('cors');
 const fs = require('fs');
 const path = require('path');
+const archiver = require('archiver');
 
 const app = express();
 
@@ -88,29 +89,70 @@ app.get('/admin/telecharger/:nomFichier', (req, res) => {
     });
 });
 
-// --- ROUTE SECRÈTE POUR TÉLÉCHARGER LES DONNÉES ---
-app.get('/api/admin/download-all', (req, res) => {
-    // On lit tous les fichiers dans le dossier data
+// (Assure-toi de garder l'initialisation de dataFolder que tu as déjà)
+const archiveFolder = path.join(dataFolder, 'archives');
+if (!fs.existsSync(archiveFolder)) {
+    fs.mkdirSync(archiveFolder);
+}
+
+// --- MIDDLEWARE DE SÉCURITÉ ---
+const checkAuth = (req, res, next) => {
+    // On récupère le token dans l'URL (?token=xxx)
+    const token = req.query.token;
+    // On vérifie avec la variable d'environnement (ou un mot de passe par défaut en dev)
+    const secret = process.env.ADMIN_SECRET || 'dev_secret_temporaire';
+    
+    if (token === secret) {
+        next(); // Le mot de passe est bon, on continue
+    } else {
+        res.status(403).send('🚫 Accès refusé. Jeton de sécurité invalide ou manquant.');
+    }
+};
+
+// --- NOUVELLE ROUTE SÉCURISÉE D'EXTRACTION (ARCHIVE + ZIP) ---
+app.get('/api/admin/extract', checkAuth, (req, res) => {
     fs.readdir(dataFolder, (err, files) => {
-        if (err) {
-            return res.status(500).send("Erreur lors de la lecture du dossier");
+        if (err) return res.status(500).send("Erreur lors de la lecture du dossier");
+
+        const jsonFiles = files.filter(f => f.endsWith('.json') && f !== 'package.json');
+        
+        if (jsonFiles.length === 0) {
+            return res.status(200).send("Aucune nouvelle donnée à extraire.");
         }
 
-        // On filtre pour ne garder que les .json
-        const jsonFiles = files.filter(f => f.endsWith('.json'));
-        let allData = [];
+        // 1. Créer un dossier de lot unique basé sur la date/heure
+        const timestamp = Date.now();
+        const batchFolderName = `batch_${timestamp}`;
+        const batchFolderPath = path.join(archiveFolder, batchFolderName);
+        fs.mkdirSync(batchFolderPath);
 
-        // On assemble le tout
+        // 2. Déplacer les fichiers JSON dans ce nouveau dossier
         jsonFiles.forEach(file => {
-            const filePath = path.join(dataFolder, file);
-            const content = fs.readFileSync(filePath, 'utf-8');
-            allData.push(JSON.parse(content));
+            const oldPath = path.join(dataFolder, file);
+            const newPath = path.join(batchFolderPath, file);
+            fs.renameSync(oldPath, newPath); // Déplacement synchrone
         });
 
-        // On envoie le gros tableau final au navigateur
-        res.setHeader('Content-Type', 'application/json');
-        res.setHeader('Content-Disposition', 'attachment; filename="toutes_les_donnees.json"');
-        res.status(200).send(JSON.stringify(allData, null, 2));
+        // 3. Créer le fichier ZIP et l'envoyer au client
+        res.setHeader('Content-Type', 'application/zip');
+        res.setHeader('Content-Disposition', `attachment; filename="extraction_donnees_${timestamp}.zip"`);
+
+        const archive = archiver('zip', { zlib: { level: 9 } }); // Niveau de compression max
+        
+        archive.on('error', (err) => {
+            res.status(500).send({ error: err.message });
+        });
+
+        // On connecte l'archive directement à la réponse HTTP
+        archive.pipe(res);
+
+        // On ajoute tout le dossier de lot dans l'archive
+        archive.directory(batchFolderPath, false);
+
+        // On finalise l'archive (déclenche l'envoi final)
+        archive.finalize();
+        
+        console.log(`📦 Extraction réussie : ${jsonFiles.length} fichiers archivés dans ${batchFolderName}.`);
     });
 });
 

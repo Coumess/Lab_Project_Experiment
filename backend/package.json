@@ -21,6 +21,7 @@
   "dependencies": {
     "@fastify/cors": "^11.2.0",
     "@fastify/express": "^4.0.4",
+    "archiver": "^7.0.1",
     "body-parser": "^2.2.2",
     "cors": "^2.8.6",
     "express": "^5.2.1",
