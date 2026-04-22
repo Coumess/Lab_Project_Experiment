@@ -224,7 +224,7 @@ function runExperiment() {
                         <input type="radio" id="autre" name="sexe" value="Autre"> <label for="autre">Autre / Préfère ne pas répondre</label>
                     </fieldset>
                     <p>
-                        <label for="education"><strong>Niveau d'étude :</strong></label><br>
+                        <label for="education"><strong>Niveau d'étude / Diplôme en cours :</strong></label><br>
                         <select id="education" name="education" required style="width: 100%; padding: 8px; margin-top: 5px;">
                             <option value="">-- Sélectionnez une option --</option>
                             <option value="Rien">Pas de diplôme</option>
