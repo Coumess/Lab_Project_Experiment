@@ -259,6 +259,8 @@ function runExperiment() {
             stimulus: `
                 <div style="max-width: 800px; text-align: center; font-size: 18px; line-height: 1.6;">
                     <h1 style="color: #2c3e50;">Bienvenue dans cette étude</h1>
+                    <p> Cette expérience ne peut s'effectuer que sur <strong>ordinateur</strong>.</p>
+                    <br>
                     <p>Cette recherche porte sur <strong>les premières impressions visuelles</strong> et la manière dont nous percevons les visages au quotidien.</p>
                     <p>Dans quelques instants, vous allez voir défiler une série de visages sur votre écran. Avant chaque visage, un mot apparaîtra très brièvement au centre de l'écran.</p>
                     <p>Votre tâche consistera uniquement à vous concentrer sur le <strong>visage</strong> pour l'évaluer.</p>
