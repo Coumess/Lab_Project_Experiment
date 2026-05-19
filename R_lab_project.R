@@ -61,13 +61,15 @@ data_clean <- data_clean %>%
 # =============================================================================
 model_fact <- lmer(rt ~ label_face * valence_word + (1 | id), data = data_clean)
 anova_fact <- anova(model_fact, type = "III")
-
+summary(model_fact)
+summary(anova_fact)
 # =============================================================================
 # 5. MODEL 2: CONGRUENCE ANALYSIS
 # =============================================================================
 model_cong <- lmer(rt ~ congruence + (1 | id), data = data_clean)
 anova_cong <- anova(model_cong, type = "III")
-
+summary(model_cong)
+summary(anova_cong)
 # =============================================================================
 # 6. DRIVERT COGNITION: COMPASSION VIA DDM MODEL OPTIMIZATION
 # =============================================================================
@@ -144,32 +146,49 @@ ggplot(agg_congruence, aes(x = congruence, y = mean_rt, color = congruence)) +
         panel.grid.major = element_line(color = "#e5e5e5", linewidth = 0.5))
 ggsave("congruence_balanced_fixed.png", width = 5, height = 5, dpi = 300)
 
-# --- PLOT 3: ENHANCED DDM SLOPE PLOT (IMPROVED LINEAR GRAPHICS) ---
+# =============================================================================
+# ENHANCED 4-COLUMN DDM BAR PLOT
+# =============================================================================
+
+# 1. Reshape the dynamically generated DDM matrix into long-format
 ddm_long <- ddm_results %>%
-  pivot_longer(cols = c(Congruent, Incongruent), names_to = "Condition", values_to = "Value") %>%
+  pivot_longer(cols = c(Congruent, Incongruent), 
+               names_to = "Condition", 
+               values_to = "Value") %>%
   mutate(Condition = factor(Condition, levels = c("Congruent", "Incongruent")))
 
-ggplot(ddm_long, aes(x = Condition, y = Value, group = 1)) +
-  # Adds a bold directional segment linking the points across conditions
-  geom_line(color = "#2c3e50", linewidth = 1.3, alpha = 0.8) +
-  # Different colorblind shapes applied to boundaries for crisp identification
-  geom_point(aes(color = Condition, shape = Condition), size = 4.5, stroke = 1.2) +
-  scale_color_manual(values = c("Congruent" = "#1b9e77", "Incongruent" = "#d95f02")) +
-  scale_shape_manual(values = c("Congruent" = 16, "Incongruent" = 17)) +
-  facet_wrap(~Parameter, scales = "free_y", ncol = 2) +
-  theme_classic(base_size = 13) +
+# 2. Render the sleek 4-panel grid layout
+ggplot(ddm_long, aes(x = Condition, y = Value, fill = Condition)) +
+  # Slimmer bar width (0.5) to keep the layout proportional and light
+  geom_bar(stat = "identity", width = 0.5, color = "#222222", linewidth = 0.5) +
+  
+  # Your chosen colorblind-safe palette (Green vs. Orange)
+  scale_fill_manual(values = c("Congruent" = "#1b9e77", "Incongruent" = "#d95f02")) +
+  
+  # CRITICAL CHANGE: Wrapped into 4 columns to create a single row of metrics
+  facet_wrap(~Parameter, scales = "free_y", ncol = 4) +
+  
+  theme_classic(base_size = 12) +
   labs(
-    title = "Latent Cognitive Transitions across Task Congruency",
-    subtitle = "Faceted slope paths tracking shifts in estimated DDM parameters",
-    x = "Experimental State",
-    y = "Model Parameter Scaling Space"
+    title = "Drift Diffusion Model (DDM) Parameter Estimation Profiles",
+    subtitle = "Faceted comparison showing distinct visual-semantic matching shifts",
+    x = "",
+    y = "Estimated Metric Value"
   ) +
   theme(
-    legend.position = "top",
-    plot.title = element_text(face = "bold", size = 14),
-    strip.text = element_text(face = "bold", size = 11),
+    legend.position = "none", # X-axis labels make a legend redundant
+    plot.title = element_text(face = "bold", size = 13),
+    plot.subtitle = element_text(color = "gray30", size = 10),
+    
+    # Bold headers with a subtle light gray background for each parameter box
+    strip.text = element_text(face = "bold", size = 10), 
     strip.background = element_rect(fill = "#f3f4f6", color = NA),
-    panel.spacing = unit(2, "lines"),
+    
+    # Grid spacing tuning
+    panel.spacing = unit(1.2, "lines"),
     panel.grid.major.y = element_line(color = "#e5e7eb", linewidth = 0.5)
   )
-ggsave("ddm_slope_comparison.png", width = 8, height = 7, dpi = 300)
+
+# Save the updated layout out to your folder
+# Adjusted dimensions (wider aspect ratio: 10x4) to perfectly fit the row layout
+ggsave("ddm_bar_comparison_compact.png", width = 10, height = 4, dpi = 300)
