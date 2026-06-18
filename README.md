@@ -19,4 +19,4 @@ To understand the cognitive mechanisms driving these decisions, we applied the D
 - Incongruence also reduced the drift rate, suggesting a less efficient evidence accumulation process during decision formation.
 
 # Read the full report (PDF)
-This README is only an overview of our study.
+This README is only an overview of our study. [Here](https://github.com/Coumess/Lab_Project_Experiment/blob/main/Lab_Project_Angely_Coumes_final.pdf)
